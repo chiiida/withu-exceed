@@ -101,15 +101,16 @@ def readHR():
     sleep_time = 0.01
     
     data = []
+    data_len = time//sleep_time
     while not EXITALL:
         data.append(100)
-        if len(data) == time//sleep_time:
+        if len(data) == data_len:
             break
 
     i = 0
     sum_data = 0
     print("Start measuring")
-    while i < len(data):
+    while i < data_len:
         data[i] = hr.read()
         sum_data += data[i]
         # print(data[i])
@@ -117,10 +118,11 @@ def readHR():
         sleep(sleep_time)
     print("finished")
 
-    average = sum_data/len(data)
+    average = sum_data/data_len
     thres = average*10
 
     result = [raw > thres for raw in data]
+    del data
 
     n_beat = 0
 
@@ -129,6 +131,7 @@ def readHR():
             continue
         if res and not result[i-1]:
             n_beat += 1
+    del result
 
     bpm = n_beat*60//time
     return bpm
