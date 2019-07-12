@@ -54,7 +54,7 @@ HEARTRATESTATUS = False
 
 #  Connecting WIFI
 def WIFIConnect():
-    global WIFISTATUS, LEDSTATUS, wlan
+    global WIFISTATUS, LEDSTATUS, wlan, EXITALL
     WIFISTATUS = False
     wlan.connect('exceed16_8', '12345678')
     print('connecting')
@@ -67,7 +67,7 @@ def WIFIConnect():
 
 
 def WIFICheck():
-    global LEDSTATUS
+    global LEDSTATUS, EXITALL
     while not EXITALL:
         if not wlan.isconnected():
             LEDSTATUS = 'disconnected'
@@ -77,8 +77,8 @@ def WIFICheck():
 
 
 def vibrationSensor():
-    global VIBRATIONSTATUS, vibration
-    while(True):
+    global VIBRATIONSTATUS, vibration, EXITALL
+    while not EXITALL:
         print('Vibration = start')
         count = 0
         for i in range(600):
@@ -132,7 +132,7 @@ def readHR():
 
 #  Recive data from readHR
 def HeartRate():
-    global HEARTRATESTATUS, bpm
+    global HEARTRATESTATUS, bpm, EXITALL
     while not EXITALL:
         print('Heartrate = start')
         bpm = readHR()
@@ -163,7 +163,7 @@ def statusLED():
 
 #  Send data to web
 def postData():
-    global API, HEARTRATESTATUS, bpm, VIBRATIONSTATUS, vibration
+    global API, HEARTRATESTATUS, bpm, VIBRATIONSTATUS, vibration, EXITALL
     while not EXITALL:
         if (VIBRATIONSTATUS):
             print('VIBRATIONSTATUS in = ', VIBRATIONSTATUS)
