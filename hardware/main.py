@@ -28,3 +28,4 @@ def WIFICheck():
   
 
 WIFIConnect()
+thread(WIFICheck, [])
