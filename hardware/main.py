@@ -193,7 +193,7 @@ def postData():
                 VIBRATIONSTATUS = False
                 HEARTRATESTATUS = False
                 print(requests.post(API, data=data, headers=headers).content)
-        sleep(0.01)
+        sleep(5)
 
 
 #  Main Begins here
@@ -205,6 +205,6 @@ thread(postData, [])
 #thread(statusLED(), [])
 try:
     while True:
-        sleep_us(100)
+        sleep(0.0005)
 except:
     EXITALL = True
