@@ -6,5 +6,12 @@ let quote = {
     danger: ["Whenever you read a cancer booklet or website or whatever, they always list depression among the side effects of cancer. But, in fact, depression is not a side effect of cancer. Depression is a side effect of dying.” – John Green, The Fault in Our Stars",
             "That’s the thing about depression: A human being can survive almost anything, as long as she sees the end in sight. But depression is so insidious, and it compounds daily, that it’s impossible to ever see the end.” – Elizabeth Wurtzel, Prozac Nation",
             ],
-            
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+function giveQuote(bpm) {
+    i = getRandomInt(2)
 }

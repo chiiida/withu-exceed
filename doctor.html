@@ -16,37 +16,50 @@
 </head>
 
 <body>
-    <div style="padding: 4%">
-        <div class='row'>
-            <div class='col-6'>
-                <div style="padding: 2%">
-                    <img src="img/img_avatar.png" alt="profilepicture" style="width:50% ; border-radius: 50%">
-                </div>
-                <div style="padding: 2% ;padding-top: 5% ; width: 50%">
-                    <div class="card">
-                        <div class="container">
-                            <h4><b> Name : </b>Bamee</h4>
-                            <h4><b> Age : </b>19</h4>
-                            <h4><b> Gender : </b>Female</h4>
-                        </div>
+    <div style="margin: 4%">
+        <div class="row">
+            <div class="col-3">
+                <div class="jumbotron" style="padding: 1rem;">
+                    <div>
+                        <center><img src="img/img_avatar.png" alt="profilepicture"
+                                style="width: 90% ; border-radius: 50%"></center>
                     </div>
-                </div>
-                <div style="padding: 2% ; padding-top: 4% ; width: 50%">
-                    <div class="card">
+                    <p class="lead">
                         <div class="container">
-                            <h4><b>Emergency Contact :</b></h4>
-                            <h4><b>&nbsp;1.</b> 00-000-00000</h4>
-                            <h4><b>&nbsp;2.</b> 00-000-00000</h4>
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6><b>Name</b></h6>
+                                    <h6><b>Age</b></h6>
+                                    <h6><b>Gender</b></h6>
+                                </div>
+                                <div class="col-8">
+                                    <h6>: Bamee</h6>
+                                    <h6>: 19</h6>
+                                    <h6>: Female</h6>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <hr class="my-4">
+                        <div class="container">
+                            <h6><b>Emergency Contact :</b></h6>
+                            <ol>
+                                <li style="font-size: 20px;">00-000-00000</li>
+                                <li style="font-size: 20px;">00-000-00000</li>
+                            </ol>
+                        </div>
                 </div>
             </div>
-            <div class="col-6">
-                <div class="row">
-                    <!-- graph1 -->
-                </div>
-                <div class="row">
-                    <!-- graph2 -->
+            <div class="col-9">
+                <div class="jumbotron" style="padding: 1rem;">
+                    <div class="row">
+                        <!-- graph1 -->
+                        <canvas id="normal-bpm"></canvas>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <!-- graph2 -->
+                        <canvas id="normal-bpm2"></canvas>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -60,8 +73,6 @@
                             <button class="btn btn-primary" type="button" onclick="postMsg()">SUMMIT</button>
                         </div>
                     </div>
-
-
                 </div>
 
             </div>
