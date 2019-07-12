@@ -11,7 +11,7 @@ EXITALL = False
 p_vibration = Pin(27, Pin.IN)
 p_RLED = Pin(14, Pin.OUT)
 p_GLED = Pin(12, Pin.OUT)
-p_BLED = Pin(5, Pin.OUT) # Pin led !!!
+p_BLED = Pin(13, Pin.OUT) # Pin led !!!
 p_buzzer = Pin(5, Pin.OUT)
 p_buzzer2 = Pin(18, Pin.OUT)
 wlan = network.WLAN(network.STA_IF)
@@ -176,6 +176,8 @@ def postData():
 #  get alert from web
 def getAlert():
     global API_alert, ALERTSTATUS, MSGALERT
+    alerted = False
+    msgAlerted = False
     while not EXITALL:
         if WIFISTATUS:
             headers = {'Content-type': 'application/json'}
@@ -184,32 +186,26 @@ def getAlert():
             if type(ALERTSTATUS) != bool:
               ALERTSTATUS = ALERTSTATUS.lower()=='true'
             MSGALERT = rest["msg"]!=''
-            if ALERTSTATUS:
+            if ALERTSTATUS and not alerted:
                 for _ in range(10):
                     print('Alert mode!!!!!!')
                     p_buzzer.value(1)
-                    sleep(0.5)
+                    sleep(0.2)
                     p_buzzer.value(0)
-                    sleep(0.5)
-            if MSGALERT:
-                for _ in range(10):
+                    sleep(0.8)
+                alerted = True
+            elif not ALERTSTATUS:
+                alerted = False
+            if MSGALERT and not msgAlerted:
+                for _ in range(5):
                     print('msgAlert!!!!!!')
                     p_buzzer2.value(1)
-                    sleep(1)
+                    sleep(0.05)
                     p_buzzer2.value(0)
-                    sleep(0.1)
-                    p_buzzer2.value(1)
-                    sleep(0.1)
-                    p_buzzer2.value(0)
-                    sleep(0.1)
-                    p_buzzer2.value(1)
-                    sleep(0.1)
-                    p_buzzer2.value(0)
-                    sleep(0.1)
-                    p_buzzer2.value(1)
-                    sleep(0.1)
-                    p_buzzer2.value(0)
-                    sleep(2)
+                    sleep(0.05)
+                msgAlerted = True
+            elif not MSGALERT:
+                msgAlerted = False
         sleep(1)
             
 
@@ -262,9 +258,9 @@ def msgalertMode():
 
 #  Main Begins here
 WIFIConnect()
-thread(vibrationSensor, [])
-thread(HeartRate, [])
-thread(postData, [])
+thread(vibrationSensor, []) # 
+thread(HeartRate, []) # Pass
+thread(postData, []) # Pass
 thread(WIFICheck, [])
 # thread(statusLED, [])
 thread(getAlert, [])
