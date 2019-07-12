@@ -80,18 +80,18 @@ def WIFICheck():
 def vibrationSensor():
     global VIBRATIONSTATUS, vibration, EXITALL, LEDSTATUS
     while not EXITALL:
-        print('vibrationSensor = ok')
         LEDSTATUS = 'measuring'
         count = 0
-        for i in range(60000):
+        for i in range(6000):
             if (p_vibration == 0):
                 count += 1
-            sleep(0.001)
+            sleep(0.01)
         if (count >= 5000):
             vibration = True
         else:
             vibration = False
         VIBRATIONSTATUS = True
+        print('VIBRATIONSTATUS = ', VIBRATIONSTATUS)
         sleep(0.01)
 
 
@@ -136,13 +136,13 @@ def readHR():
 def HeartRate():
     global HEARTRATESTATUS, bpm, EXITALL, LEDSTATUS
     while not EXITALL:
-        print('hr= ok')
         LEDSTATUS == 'measuring'
         bpm = 0
         for i in range(6):
           bpm += readHR()
         bpm /=6
         HEARTRATESTATUS = True
+        print('HEARTRATESTATUS = ', HEARTRATESTATUS)
 
 
 # In progress
@@ -173,6 +173,7 @@ def statusLED():
             p_GLED.value(1)
             p_BLED.value(0)
     sleep(0.01)
+
 
 
 #  Send data to web
