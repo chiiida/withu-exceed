@@ -1,8 +1,13 @@
-/* รอedit สีbg */
 body {
-    background: linear-gradient(45deg, rgb(231, 243, 253) 0%, rgb(255, 239, 254) 69%);
+    padding-top: 3%;
+    background: linear-gradient(45deg,#FF4E50,#F9D423 );
+    background-size: cover;
+    height: 100vh;
 }
 
+#logo{
+    width: 40%
+}
 .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
@@ -11,10 +16,12 @@ body {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 #doctor,#patient {
-    width:75% ; border-radius: 50%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    width:60% ; border-radius: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2) ;
+    opacity: 0.8;
 }
 #doctor:hover,#patient:hover{
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.2);
 }
 
 .container {
