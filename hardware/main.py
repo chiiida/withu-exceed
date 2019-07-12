@@ -4,6 +4,9 @@ import json
 import urequests as requests
 from _thread import start_new_thread as thread
 import network
+import gc
+
+gc.enable()
 
 #  Setup
 EXITALL = False
@@ -11,7 +14,7 @@ EXITALL = False
 p_vibration = Pin(27, Pin.IN)
 p_RLED = Pin(14, Pin.OUT)
 p_GLED = Pin(12, Pin.OUT)
-p_BLED = Pin(13, Pin.OUT)
+p_BLED = Pin(13, Pin.OUT)  # Pin led !!!
 p_buzzer = Pin(5, Pin.OUT)
 p_buzzer2 = Pin(18, Pin.OUT)
 wlan = network.WLAN(network.STA_IF)
@@ -31,6 +34,8 @@ ALERTSTATUS = False
 MSGALERT = False
 
 #  Connecting WIFI
+
+
 def WIFIConnect():
     global WIFISTATUS, LEDSTATUS, wlan, EXITALL, p_RLED, p_GLED, p_BLED
     WIFISTATUS = False
@@ -83,7 +88,7 @@ def vibrationSensor():
 def readHR():
     time = 10  # in seconds.
     sleep_time = 0.01
-    
+
     data_len = int(time//sleep_time)
     data = [100 for _ in range(data_len)]
     i = 0
@@ -109,7 +114,7 @@ def readHR():
             n_beat += 1
 
     del data
-    
+    gc.collect()
     bpm = n_beat*60//time
     return bpm
 
@@ -122,8 +127,8 @@ def HeartRate():
         p_GLED.value(0)
         p_BLED.value(1)
         bpm = 0
-        for i in range (2):
-          bpm += readHR()
+        for i in range(2):
+            bpm += readHR()
         bpm /= 2
         HEARTRATESTATUS = True
         print('HEARTRATESTATUS = ', HEARTRATESTATUS)
@@ -160,7 +165,6 @@ def statusLED():
     sleep(0.01)
 
 
-
 #  Send data to web
 def postData():
     global API_data, HEARTRATESTATUS, bpm, VIBRATIONSTATUS, vibration, EXITALL
@@ -168,7 +172,7 @@ def postData():
         if (VIBRATIONSTATUS and HEARTRATESTATUS):
             if WIFISTATUS:
                 data = json.dumps({
-                    'data':{
+                    'data': {
                         'vibration': vibration,
                         'bpm': bpm
                     }
@@ -178,9 +182,12 @@ def postData():
                 VIBRATIONSTATUS = False
                 HEARTRATESTATUS = False
                 print(requests.post(API_data, data=data, headers=headers).content)
+                gc.collect()
         sleep(5)
 
 #  get alert from web
+
+
 def getAlert():
     global API_alert, ALERTSTATUS, MSGALERT
     alerted = False
@@ -191,8 +198,8 @@ def getAlert():
             rest = requests.get(API_alert, headers=headers).json()
             ALERTSTATUS = rest["alert"]
             if type(ALERTSTATUS) != bool:
-              ALERTSTATUS = ALERTSTATUS.lower()=='true'
-            MSGALERT = rest["msg"]!=''
+                ALERTSTATUS = ALERTSTATUS.lower() == 'true'
+            MSGALERT = rest["msg"] != ''
             if ALERTSTATUS and not alerted:
                 for _ in range(10):
                     print('Alert mode!!!!!!')
@@ -213,8 +220,9 @@ def getAlert():
                 msgAlerted = True
             elif not MSGALERT:
                 msgAlerted = False
+        gc.collect()
         sleep(1)
-            
+
 
 #  Buzzer beep when alert
 def alertMode():
@@ -230,10 +238,12 @@ def alertMode():
             count += 1
         else:
             if not ALERTSTATUS:
-              count = 0
+                count = 0
             sleep(3)
 
 #  Buzzer beep when receivemsg
+
+
 def msgalertMode():
     global MSGALERT
     count = 0
@@ -259,15 +269,15 @@ def msgalertMode():
             count += 1
         else:
             if not MSGALERT:
-              count = 0
+                count = 0
             sleep(3)
 
 
 #  Main Begins here
 WIFIConnect()
-thread(vibrationSensor, []) # 
-thread(HeartRate, []) # Pass
-thread(postData, []) # Pass
+thread(vibrationSensor, [])
+thread(HeartRate, [])  # Pass
+thread(postData, [])  # Pass
 thread(WIFICheck, [])
 # thread(statusLED, [])
 thread(getAlert, [])
