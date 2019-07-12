@@ -1,20 +1,54 @@
-from machine import Pin, PWM, ADC
+from machine import Pin, ADC
 from time import sleep
 import json
 import urequests as requests
 from _thread import start_new_thread as thread
 import network
 
+
+### ------------ Import Statistic ----------- ###
+def mean(data):
+    n = len(data)
+    if n < 1:
+        raise ValueError('mean requires at least one data point')
+    return sum(data)/n
+
+
+def _ss(data):
+    c = mean(data)
+    ss = sum((x-c)**2 for x in data)
+    return ss
+
+
+def stddev(data, ddof=0):
+    n = len(data)
+    if n < 2:
+        raise ValueError('variance requires at least two data points')
+    ss = _ss(data)
+    pvar = ss/(n-ddof)
+    return pvar**0.5
+### ------- Import Statistic End here ------- ###
+
+
+### Setup ###
 p_vibration = Pin(27,Pin.IN)
 p_RLED = Pin(14, Pin.OUT) 
 p_GLED = Pin(12, Pin.OUT) 
 p_BLED = Pin(13, Pin.OUT)
-
-WIFISTATUS = False
-LEDSTATUS = 'disconnected'
+hr = ADC(Pin(34))
+hr.atten(ADC.ATTN_11DB)
+hr.width(ADC.WIDTH_12BIT)
 API = "https://exceed.superposition.pknn.dev/data/withu"
-VIBRATIONSTATUS = False
 
+
+### Init Status ###
+LEDSTATUS = 'disconnected'
+WIFISTATUS = False
+VIBRATIONSTATUS = False
+HEARTRATESTATUS = False
+
+
+### Connecting WIFI ###
 def WIFIConnect():
   global WIFISTATUS, LEDSTATUS
   wlan = network.WLAN(network.STA_IF)
@@ -27,6 +61,8 @@ def WIFIConnect():
   WIFISTATUS = wlan.isconnected()
   LEDSTATUS = 'connected'
 
+
+#In progress !!!
 def WIFICheck():
   global LEDSTATUS
   while True:
@@ -34,7 +70,9 @@ def WIFICheck():
       LEDSTATUS = 'disconnected'
       WIFIConnect()
     sleep(2)
-  
+
+
+### Vibration Detect ###
 def vibrationSensor():
   global VIBRATIONSTATUS,vibration
   while(True):
@@ -49,8 +87,53 @@ def vibrationSensor():
       vibration = False
     VIBRATIONSTATUS = True
     sleep(0.01)
-  
 
+
+### Read HR ###
+def readHR():
+    time = 10  # in seconds.
+    sleep_time = 0.01
+
+    data = []
+    while True:
+        data.append(100)
+        if len(data) == time//sleep_time:
+            break
+
+    i = 0
+
+    while i < len(data):
+        data[i] = hr.read()
+        print(data[i])
+        i += 1
+        sleep(sleep_time)
+
+    average = sum(data)/len(data)
+    thres = average+0.75*stddev(data)
+
+    result = [raw > thres for raw in data]
+
+    n_beat = 0
+
+    for i, res in enumerate(result):
+        if i == 0:
+            continue
+        if res and not result[i-1]:
+            n_beat += 1
+
+    bpm = n_beat*60//time
+    return bpm
+
+
+### Recive data from readHR ###
+def HeartRate():
+  global HEARTRATESTATUS, bpm
+  while(True):
+    bpm = readHR()
+    HEARTSTATUS = True
+
+
+#In progress
 def statusLED():
   while(True):
     if (LEDSTATUS == 'disconnected'):
@@ -71,28 +154,30 @@ def statusLED():
       p_BLED.value(0)
   sleep(0.01)
 
+### Send data to web ###
 def postData():
-    global API, vibration
+    global API, HEARTRATESTATUS, bpm, VIBRATIONSTATUS, vibration
     while True:
-        if (vibration):
-          print('Vibration = True')
-        else:
-          print('Vibration = False')          
+      if (HEARTRATESTATUS and VIBRATIONSTATUS):        
         if WIFISTATUS:
           r = requests.get(API)
           json_data = r.json()
           print(data)
           data = json.dumps({
-            'vibration': vibration
+            'vibration': vibration,
+            'bpm': bpm
           })
           headers = {'Content-type': 'application/json'}
           print(requests.post(API, data=data, headers=headers).content)
           VIBRATIONSTATUS = False
+          HEARTRATESTATUS = False
       sleep(0.01)
 
 
+### Main Begins here ###
 WIFIConnect()
-#thread(WIFICheck, [])
-#thread(statusLED(), [])
+#thread(WIFICheck(), []) # In progress
+#thread(statusLED(), []) # In progress
 thread(vibrationSensor(), [])
+thread(HeartRate(), [])
 thread(postData(), [])
