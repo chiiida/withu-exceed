@@ -142,10 +142,7 @@ def HeartRate():
     global HEARTRATESTATUS, bpm, EXITALL, LEDSTATUS
     while not EXITALL:
         LEDSTATUS == 'measuring'
-        bpm = 0
-        for i in range(6):
-          bpm += readHR()
-        bpm /=6
+        bpm = readHR()
         HEARTRATESTATUS = True
         print('HEARTRATESTATUS = ', HEARTRATESTATUS)
 
