@@ -21,12 +21,10 @@ def WIFIConnect():
   wlan.connect('exceed16_8', '12345678')
   LEDSTATUS = 'connecting'
   while not wlan.isconnected():
-    print('connecting...')
     sleep(0.01)
   WIFISTATUS = wlan.isconnected()
   LEDSTATUS = 'connected'
-  print('connected')
-  
+
 def WIFICheck():
   while True:
     if not WIFISTATUS:
@@ -41,15 +39,15 @@ def HitSensor():
 
 def statusLED():
   while(True):
-    if (LEDSTATUS = 'disconnected'):
+    if (LEDSTATUS == 'disconnected'):
       p_RLED.value(1)
       p_GLED.value(0)
       p_BLED.value(0)
-    elif (LEDSTATUS = 'connecting'):
+    elif (LEDSTATUS == 'connecting'):
       p_RLED.value(1)
       p_GLED.value(0)
       p_BLED.value(0)
-      sleep(0)
+      sleep(0.01)
       p_RLED.value(0)
       p_GLED.value(0)
       p_BLED.value(0)
@@ -57,6 +55,7 @@ def statusLED():
       p_RLED.value(0)
       p_GLED.value(1)
       p_BLED.value(0)
+  sleep(0.01)
 
 WIFIConnect()
 thread(WIFICheck, [])
