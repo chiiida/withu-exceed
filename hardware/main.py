@@ -37,13 +37,14 @@ p_vibration = Pin(27, Pin.IN)
 p_RLED = Pin(14, Pin.OUT)
 p_GLED = Pin(12, Pin.OUT)
 p_BLED = Pin(5, Pin.OUT) # Pin led !!!
+p_buzzer = Pin(15, Pin.OUT)
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 hr = ADC(Pin(34))
 hr.atten(ADC.ATTN_11DB)
 hr.width(ADC.WIDTH_12BIT)
-#API = "https://exceed.superposition.pknn.dev/data/withu"
-API = "http://10.46.75.118:5000/data"
+API_alert = "https://exceed.superposition.pknn.dev/data/withu"
+API_data = "http://10.46.75.118:5000/data"
 
 #  Init Status
 LEDSTATUS = 'disconnected'
@@ -143,7 +144,7 @@ def HeartRate():
         sleep(0.1)
 
 
-# In progress
+# LED tell status
 def statusLED():
     while not EXITALL:
         if (LEDSTATUS == 'disconnected'):
@@ -176,7 +177,7 @@ def statusLED():
 
 #  Send data to web
 def postData():
-    global API, HEARTRATESTATUS, bpm, VIBRATIONSTATUS, vibration, EXITALL
+    global API_data, HEARTRATESTATUS, bpm, VIBRATIONSTATUS, vibration, EXITALL
     while not EXITALL:
         if (VIBRATIONSTATUS and HEARTRATESTATUS):
             if WIFISTATUS:
@@ -190,8 +191,30 @@ def postData():
                 headers = {'Content-type': 'application/json'}
                 VIBRATIONSTATUS = False
                 HEARTRATESTATUS = False
-                print(requests.post(API, data=data, headers=headers).content)
+                print(requests.post(API_data, data=data, headers=headers).content)
         sleep(5)
+
+#  get alert from web
+def getAlert():
+    global API_alert, ALERTSTATUS
+    while not EXITALL:
+        if WIFISTATUS:
+            headers = {'Content-type': 'application/json'}
+            ALERTSTATUS = (requests.get(API_alert, headers=headers).json)["alert"]
+        sleep(5)
+            
+
+#  Buzzer beep when alert
+def alertMode():
+    global ALERTSTATUS
+    while not EXITALL:
+        if (ALERTSTATUS):
+            p_buzzer.value(1)
+            sleep(0.5)
+            p_buzzer.value(0)
+            sleep(0.5)
+        else:
+            sleep(3)
 
 
 #  Main Begins here
