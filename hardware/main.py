@@ -73,14 +73,15 @@ def WIFICheck():
             LEDSTATUS = 'disconnected'
             WIFIConnect()
         sleep(2)
-
-
 #  Vibration Detect
+
+
 def vibrationSensor():
     global VIBRATIONSTATUS, vibration
-    while not EXITALL:
+    while(True):
+        print('Vibration = start')
         count = 0
-        for i in range(60000):
+        for i in range(600):
             if (p_vibration == 0):
                 count += 1
             sleep(0.001)
@@ -133,6 +134,7 @@ def readHR():
 def HeartRate():
     global HEARTRATESTATUS, bpm
     while not EXITALL:
+        print('Heartrate = start')
         bpm = readHR()
         HEARTRATESTATUS = True
 
@@ -169,6 +171,9 @@ def postData():
             Pin(5, Pin.OUT).value(1)
             print('WIFISTATUS =', WIFISTATUS)
             if WIFISTATUS:
+                r = requests.get(API)
+                json_data = r.json()
+                bpm = 10
                 data = json.dumps({
                     'vibration': vibration,
                     'bpm': bpm
@@ -181,14 +186,13 @@ def postData():
         sleep(0.01)
 
 
-#  Main Begins here
+### Main Begins here ###
 WIFIConnect()
-# thread(WIFICheck(), []) # In progress
-# thread(statusLED(), []) # In progress
 thread(vibrationSensor, [])
 thread(HeartRate, [])
 thread(postData, [])
-
+# thread(WIFICheck(), []) # In progress
+# thread(statusLED(), []) # In progress
 try:
     while True:
         sleep_us(10)
