@@ -9,25 +9,25 @@ p_hit = Pin(27,Pin.IN)
 p_RLED = Pin(14, Pin.OUT) 
 p_GLED = Pin(12, Pin.OUT) 
 p_BLED = Pin(13, Pin.OUT)
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
 
 WIFISTATUS = False
 LEDSTATUS = 'disconnected'
 
 def WIFIConnect():
-  global WIFISTATUS, LEDSTATUS
-  wlan = network.WLAN(network.STA_IF)
-  wlan.active(True)
+  global WIFISTATUS, LEDSTATUS, wlan
   WIFISTATUS = False
   wlan.connect('exceed16_8', '12345678')
   LEDSTATUS = 'connecting'
   while not wlan.isconnected():
     sleep(0.01)
-  WIFISTATUS = wlan.isconnected()
+  WIFISTATUS = True
   LEDSTATUS = 'connected'
 
 def WIFICheck():
   while True:
-    if not WIFISTATUS:
+    if not wlan.isconnected():
       LEDSTATUS = 'disconnected'
       WIFIConnect()
     sleep(2)
