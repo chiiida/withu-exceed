@@ -55,11 +55,11 @@ def WIFIConnect():
   wlan.active(True)
   WIFISTATUS = False
   wlan.connect('exceed16_8', '12345678')
-  LEDSTATUS = 'connecting'
+  print('connecting')
   while not wlan.isconnected():
     sleep(0.01)
   WIFISTATUS = wlan.isconnected()
-  LEDSTATUS = 'connected'
+  print('connected')
 
 
 #In progress !!!
@@ -86,6 +86,7 @@ def vibrationSensor():
     else:
       vibration = False
     VIBRATIONSTATUS = True
+    print('VIBRATIONSTATUS out = ',VIBRATIONSTATUS)
     sleep(0.01)
 
 
@@ -104,7 +105,7 @@ def readHR():
 
     while i < len(data):
         data[i] = hr.read()
-        print(data[i])
+        #print(data[i])
         i += 1
         sleep(sleep_time)
 
@@ -153,20 +154,25 @@ def statusLED():
       p_GLED.value(1)
       p_BLED.value(0)
   sleep(0.01)
+  
 
 ### Send data to web ###
 def postData():
     global API, HEARTRATESTATUS, bpm, VIBRATIONSTATUS, vibration
-    while True:
-      if (HEARTRATESTATUS and VIBRATIONSTATUS):        
+    while(True):
+      if (VIBRATIONSTATUS):
+        print('VIBRATIONSTATUS in = ',VIBRATIONSTATUS)
+        print('begin post')
+        Pin(5,Pin.OUT).value(1)
+        print('WIFISTATUS =', WIFISTATUS)
         if WIFISTATUS:
           r = requests.get(API)
           json_data = r.json()
-          print(data)
           data = json.dumps({
             'vibration': vibration,
             'bpm': bpm
           })
+          print(data)
           headers = {'Content-type': 'application/json'}
           print(requests.post(API, data=data, headers=headers).content)
           VIBRATIONSTATUS = False
@@ -178,6 +184,6 @@ def postData():
 WIFIConnect()
 #thread(WIFICheck(), []) # In progress
 #thread(statusLED(), []) # In progress
-thread(vibrationSensor(), [])
-thread(HeartRate(), [])
-thread(postData(), [])
+thread(vibrationSensor, [])
+thread(HeartRate, [])
+thread(postData, [])
