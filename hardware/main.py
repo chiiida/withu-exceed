@@ -11,7 +11,7 @@ EXITALL = False
 p_vibration = Pin(27, Pin.IN)
 p_RLED = Pin(14, Pin.OUT)
 p_GLED = Pin(12, Pin.OUT)
-p_BLED = Pin(13, Pin.OUT) # Pin led !!!
+p_BLED = Pin(13, Pin.OUT)
 p_buzzer = Pin(5, Pin.OUT)
 p_buzzer2 = Pin(18, Pin.OUT)
 wlan = network.WLAN(network.STA_IF)
@@ -32,16 +32,19 @@ MSGALERT = False
 
 #  Connecting WIFI
 def WIFIConnect():
-    global WIFISTATUS, LEDSTATUS, wlan, EXITALL
+    global WIFISTATUS, LEDSTATUS, wlan, EXITALL, p_RLED, p_GLED, p_BLED
     WIFISTATUS = False
     wlan.connect('exceed16_8', '12345678')
     print('connecting')
+    p_RLED.value(1)
     LEDSTATUS = 'connecting'
     while not wlan.isconnected():
+        p_RLED.value(0)
         sleep(0.01)
     WIFISTATUS = True
     print('connected')
-    LEDSTATUS = 'connected'
+    p_RLED.value(0)
+    p_GLED.value(1)
 
 
 #  Checking WIFI
@@ -58,7 +61,9 @@ def WIFICheck():
 def vibrationSensor():
     global VIBRATIONSTATUS, vibration, EXITALL, LEDSTATUS
     while not EXITALL:
-        LEDSTATUS = 'measuring'
+        p_RLED.value(0)
+        p_GLED.value(0)
+        p_BLED.value(1)
         count = 0
         v_count = 0
         while not (HEARTRATESTATUS):
@@ -111,9 +116,11 @@ def readHR():
 
 #  Recive data from readHR
 def HeartRate():
-    global HEARTRATESTATUS, bpm, EXITALL, LEDSTATUS
+    global HEARTRATESTATUS, bpm, EXITALL, LEDSTATUS, p_RLED, p_GLED, p_BLED
     while not EXITALL:
-        LEDSTATUS == 'measuring'
+        p_RLED.value(0)
+        p_GLED.value(0)
+        p_BLED.value(1)
         bpm = 0
         for i in range (2):
           bpm += readHR()
