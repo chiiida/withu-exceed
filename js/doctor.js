@@ -15,9 +15,23 @@ function getDocMsg() {
 }
 
 // POST
-function postMsg() {
+function postAllData() {
     fetch(baseURL + '/data/withu', {
         method: 'POST',
+        body: JSON.stringify(getDocMsg()),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+      .then(response => console.log('Success:', JSON.stringify(response)))
+      .catch(error => console.error('Error:', error));
+}
+
+
+// POST
+function postMsg() {
+    fetch(baseURL + '/data/withu', {
+        method: 'PUT',
         body: JSON.stringify(getDocMsg()),
         headers:{
           'Content-Type': 'application/json'
