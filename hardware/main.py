@@ -171,8 +171,6 @@ def postData():
             Pin(5, Pin.OUT).value(1)
             print('WIFISTATUS =', WIFISTATUS)
             if WIFISTATUS:
-                r = requests.get(API)
-                json_data = r.json()
                 bpm = 10
                 data = json.dumps({
                     'vibration': vibration,
