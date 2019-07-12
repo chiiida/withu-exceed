@@ -121,17 +121,13 @@ def readHR():
     average = sum_data/data_len
     thres = average*10
 
-    result = [raw > thres for raw in data]
-    del data
-
     n_beat = 0
 
-    for i, res in enumerate(result):
+    for i, res in enumerate(data):
         if i == 0:
             continue
-        if res and not result[i-1]:
+        if res > thres and not data[i-1] > thres:
             n_beat += 1
-    del result
 
     bpm = n_beat*60//time
     return bpm
