@@ -107,16 +107,18 @@ def readHR():
             break
 
     i = 0
+    sum_data = 0
     print("Start measuring")
     while i < len(data):
         data[i] = hr.read()
+        sum_data += data[i]
         # print(data[i])
         i += 1
         sleep(sleep_time)
     print("finished")
 
-    average = sum(data)/len(data)
-    thres = average+0.75*stddev(data)
+    average = sum_data/len(data)
+    thres = average*10
 
     result = [raw > thres for raw in data]
 
