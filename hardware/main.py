@@ -184,7 +184,7 @@ def postData():
         sleep(0.01)
 
 
-### Main Begins here ###
+#  Main Begins here
 WIFIConnect()
 thread(vibrationSensor, [])
 thread(HeartRate, [])
