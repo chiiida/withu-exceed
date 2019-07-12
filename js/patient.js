@@ -1,13 +1,15 @@
 const baseURL = 'https://exceed.superposition.pknn.dev';
 
 // GET
-fetch(baseURL + '/data/withu')
+function getMsg() {
+    fetch(baseURL + '/data/withu')
   .then(function(response) {
     return response.json();
   })
   .then(function(myJson) {
       $('#readDocMsg').append(myJson.msg)
   });
+}
 
 function getBpm() {
     fetch(myURL + '/data/withu/bpm')
@@ -28,3 +30,7 @@ function getVibration() {
       console.log(myJson)
   });
 }
+
+setInterval(() => {
+    getMsg()
+}, 1000)

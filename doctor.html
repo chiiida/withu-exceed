@@ -19,7 +19,7 @@
     <div style="margin: 4%">
         <div class="row">
             <div class="col-3" style="position: fixed;">
-                <div class="jumbotron" style="padding: 1rem ">
+                <div class="jumbotron" style="padding: 1rem; background: #fff;">
                     <div>
                         <center><img src="img/img_avatar.png" alt="profilepicture"
                                 style="width: 90% ; border-radius: 50%"></center>
@@ -50,14 +50,14 @@
                 </div>
             </div>
             <div class="col-12" style="padding-left: 30%">
-                <div class="jumbotron" style="padding: 1rem;">
+                <div class="jumbotron" style="padding: 1rem; background: #fff;">
                     <div class="row">
                         <!-- graph1 -->
-                        <canvas id="normal-bpm"></canvas>
+                        <canvas id="vibration"></canvas>
                     </div>
                     <br />
                 </div>
-                <div class="jumbotron" style="padding: 1rem;">
+                <div class="jumbotron" style="padding: 1rem; background: #fff;">
                     <div class="row">
                         <!-- graph2 -->
                         <canvas id="real-time"></canvas>
@@ -65,14 +65,16 @@
                 </div>
 
                 <div class="row">
-                    <div class="container" style="padding-left: 1%">
+                    <div class="container" style="padding-left: 1%;">
+                        <h4>Doctor's review</h4>
+                        <br />
                         <div class="input-group mb-3">
                             <textarea type="textarea" class="form-control" placeholder="Enter a message"
-                                aria-label="Recipient's username" aria-describedby="basic-addon2"
+                                aria-label="Enter a message" aria-describedby="basic-addon2"
                                 id="docMsg"></textarea>
                         </div>
                         <div class="input-group-append float-right">
-                            <button class="btn btn-primary" type="button" onclick="postMsg()">SUMMIT</button>
+                            <button class="btn btn-primary" type="button" onclick="postMsg()">SUBMIT</button>
                         </div>
                     </div>
                 </div>
