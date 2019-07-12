@@ -5,31 +5,6 @@ import urequests as requests
 from _thread import start_new_thread as thread
 import network
 
-
-#  Import Statistic
-def mean(data):
-    n = len(data)
-    if n < 1:
-        raise ValueError('mean requires at least one data point')
-    return sum(data)/n
-
-
-def _ss(data):
-    c = mean(data)
-    ss = sum((x-c)**2 for x in data)
-    return ss
-
-
-def stddev(data, ddof=0):
-    n = len(data)
-    if n < 2:
-        raise ValueError('variance requires at least two data points')
-    ss = _ss(data)
-    pvar = ss/(n-ddof)
-    return pvar**0.5
-#  Import Statistic End here
-
-
 #  Setup
 EXITALL = False
 
@@ -37,7 +12,8 @@ p_vibration = Pin(27, Pin.IN)
 p_RLED = Pin(14, Pin.OUT)
 p_GLED = Pin(12, Pin.OUT)
 p_BLED = Pin(5, Pin.OUT) # Pin led !!!
-p_buzzer = Pin(15, Pin.OUT)
+p_buzzer = Pin(5, Pin.OUT)
+p_buzzer2 = Pin(18, Pin.OUT)
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 hr = ADC(Pin(34))
@@ -51,7 +27,8 @@ LEDSTATUS = 'disconnected'
 WIFISTATUS = False
 VIBRATIONSTATUS = False
 HEARTRATESTATUS = False
-
+ALERTSTATUS = False
+MSGALERT = False
 
 #  Connecting WIFI
 def WIFIConnect():
@@ -196,24 +173,63 @@ def postData():
 
 #  get alert from web
 def getAlert():
-    global API_alert, ALERTSTATUS
+    global API_alert, ALERTSTATUS, MSGALERT
     while not EXITALL:
         if WIFISTATUS:
             headers = {'Content-type': 'application/json'}
-            ALERTSTATUS = (requests.get(API_alert, headers=headers).json)["alert"]
-        sleep(5)
+            rest = requests.get(API_alert, headers=headers).json()
+            ALERTSTATUS = rest["alert"]
+            if type(ALERTSTATUS) != bool:
+              ALERTSTATUS = ALERTSTATUS.lower()=='true'
+            MSGALERT = rest["msg"]!=''
+            print('ALERTSTATUS =', ALERTSTATUS)
+        sleep(1)
             
 
 #  Buzzer beep when alert
 def alertMode():
     global ALERTSTATUS
+    count = 0
     while not EXITALL:
-        if (ALERTSTATUS):
+        if ALERTSTATUS and count < 10:
+            print('Alert mode!!!!!!')
             p_buzzer.value(1)
             sleep(0.5)
             p_buzzer.value(0)
             sleep(0.5)
+            count += 1
         else:
+            if not ALERTSTATUS:
+              count = 0
+            sleep(3)
+
+#  Buzzer beep when receivemsg
+def msgalertMode():
+    global MSGALERT
+    count = 0
+    while not EXITALL:
+        if MSGALERT and count < 3:
+            print('msgAlert!!!!!!')
+            p_buzzer2.value(1)
+            sleep(1)
+            p_buzzer2.value(0)
+            sleep(0.1)
+            p_buzzer2.value(1)
+            sleep(0.1)
+            p_buzzer2.value(0)
+            sleep(0.1)
+            p_buzzer2.value(1)
+            sleep(0.1)
+            p_buzzer2.value(0)
+            sleep(0.1)
+            p_buzzer2.value(1)
+            sleep(0.1)
+            p_buzzer2.value(0)
+            sleep(2)
+            count += 1
+        else:
+            if not MSGALERT:
+              count = 0
             sleep(3)
 
 
@@ -221,11 +237,12 @@ def alertMode():
 WIFIConnect()
 #thread(vibrationSensor, [])
 #thread(HeartRate, [])
-#hread(postData, [])
+#thread(postData, [])
 #thread(WIFICheck, [])
 #thread(statusLED, [])
 thread(getAlert, [])
 thread(alertMode, [])
+thread(msgalertMode, [])
 try:
     while True:
         sleep(0.0005)
