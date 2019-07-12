@@ -141,6 +141,7 @@ def HeartRate():
         bpm = readHR()
         HEARTRATESTATUS = True
         print('HEARTRATESTATUS = ', HEARTRATESTATUS)
+        sleep(0.1)
 
 
 # In progress
