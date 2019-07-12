@@ -3,7 +3,8 @@ const baseURL = 'https://exceed.superposition.pknn.dev';
 let mainData = {
 	"data": {
         "msg": "",
-        "bpm" : []
+        "bpm" : [],
+        "vibration": []
 	}
 }
 
