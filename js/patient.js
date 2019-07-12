@@ -32,6 +32,14 @@ function getVibration() {
   });
 }
 
+img = document.getElementById('animated')
+
+function pulseAnimated() {
+  img.innerHTML = '<img src="img/1.png">';
+  setTimeout(() => img.innerHTML = '<img src="img/2.png">', 500);
+}
+
 setInterval(() => {
     getMsg()
+    pulseAnimated()
 }, 1000)
