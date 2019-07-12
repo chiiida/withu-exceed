@@ -35,6 +35,8 @@ p_vibration = Pin(27,Pin.IN)
 p_RLED = Pin(14, Pin.OUT) 
 p_GLED = Pin(12, Pin.OUT) 
 p_BLED = Pin(13, Pin.OUT)
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
 hr = ADC(Pin(34))
 hr.atten(ADC.ATTN_11DB)
 hr.width(ADC.WIDTH_12BIT)
@@ -50,23 +52,20 @@ HEARTRATESTATUS = False
 
 ### Connecting WIFI ###
 def WIFIConnect():
-  global WIFISTATUS, LEDSTATUS
-  wlan = network.WLAN(network.STA_IF)
-  wlan.active(True)
+  global WIFISTATUS, LEDSTATUS, wlan
   WIFISTATUS = False
   wlan.connect('exceed16_8', '12345678')
   print('connecting')
   while not wlan.isconnected():
     sleep(0.01)
-  WIFISTATUS = wlan.isconnected()
-  print('connected')
-
+  WIFISTATUS = True
+  LEDSTATUS = 'connected'
 
 #In progress !!!
 def WIFICheck():
   global LEDSTATUS
   while True:
-    if not WIFISTATUS:
+    if not wlan.isconnected():
       LEDSTATUS = 'disconnected'
       WIFIConnect()
     sleep(2)
