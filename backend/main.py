@@ -20,16 +20,16 @@ def data():
         'vibration': []
     }
     if data is not None:
-        if old_dat['msg'] is not None:
+        if 'msg' in old_dat and old_dat['msg'] is not None:
             newdat['msg'] = old_dat['msg']
-        if old_dat['bpm'] is not None:
+        if 'bpm' in old_dat and old_dat['bpm'] is not None:
             newdat['bpm'] = old_dat['bpm']
-        if old_dat['vibration'] is not None:
+        if 'vibration' in old_dat and old_dat['vibration'] is not None:
             newdat['vibration'] = old_dat['vibration']
         newdat['bpm'].append(float(data['data']['bpm']))
         newdat['vibration'].append(int(data['data']['vibration']))
         requests.post(
-            'https://exceed.superposition.pknn.dev/data/withu', json=old_dat)
+            'https://exceed.superposition.pknn.dev/data/withu', json=newdat)
     return jsonify({
         'status': True,
         'msg': 'OK'
