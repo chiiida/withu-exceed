@@ -4,14 +4,19 @@ let mainData = {
 	"data": {
         "msg": "",
         "bpm" : [],
-        "vibration": []
+        "vibration": [],
+        "alert": false
 	}
 }
 
 function getDocMsg() {
-    mainData.data.msg = $('#docMsg').val()
+    msg = $('#docMsg').val()
+    msgVal = {
+        "value" : msg
+    }
+    document.getElementById('docMsg').value = '';
 
-    return mainData
+    return msgVal
 }
 
 // POST
@@ -27,10 +32,9 @@ function postAllData() {
       .catch(error => console.error('Error:', error));
 }
 
-
-// POST
+// PUT
 function postMsg() {
-    fetch(baseURL + '/data/withu', {
+    fetch(baseURL + '/data/withu/msg', {
         method: 'PUT',
         body: JSON.stringify(getDocMsg()),
         headers:{

@@ -1,38 +1,57 @@
-var ctx = document.getElementById('normal-bpm').getContext('2d');
-var ctx2 = document.getElementById('normal-bpm2').getContext('2d');
+const myURL = 'https://exceed.superposition.pknn.dev';
 
-var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'line',
+function drawGraph() {
+    fetch(myURL + '/data/withu/timestamp')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+      var timestamp = myJson.map(function(v) { return v.slice(10, 16) });
+      var lineReal = document.getElementById('real-time').getContext('2d');
+      
+      fetch(myURL + '/data/withu/bpm')
+        .then(function(response) {
+        return response.json();
+        })
+        .then(function(myJson) {
+            var chart = new Chart(lineReal, {
+                // The type of chart we want to create
+                type: 'line',
+            
+                // The data for our dataset
+                data: {
+                    labels: timestamp,
+                    datasets: [{
+                        label: 'Real-time BPM',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: myJson,
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                    }]
+                },
+            
+                // Configuration options go here
+                options: {
+                    scales: {
+                        yAxes:[{
+                            ticks: {
+                                min: myJson[0] - 20,
+                                max: myJson.lenght + 20
+                                // stacked: true
+                            }
+                        }],
+                    }
+                }
+            });
+        });
+  });
+}
 
-    // The data for our dataset
-    data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-            label: 'My First dataset',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45]
-        }]
-    },
+function putPulse(bpm) {
+    document.getElementById('pulse').innerHTML = bpm
+}
 
-    // Configuration options go here
-    options: {}
-});
+drawGraph()
 
-var chart = new Chart(ctx2, {
-    // The type of chart we want to create
-    type: 'line',
-
-    // The data for our dataset
-    data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-            label: 'My First dataset',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45]
-        }]
-    },
-
-    // Configuration options go here
-    options: {}
-});
+setInterval(() => {
+    drawGraph()
+}, 60000)

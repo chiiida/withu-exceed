@@ -1,0 +1,12 @@
+.selectpicker {
+    /* width: 150%; */
+    height: 150%;
+    font-size: 30px;
+}
+
+#set-btn {
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    width:50%;
+}
