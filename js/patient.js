@@ -7,7 +7,8 @@ function getMsg() {
     return response.json();
   })
   .then(function(myJson) {
-      $('#readDocMsg').append(myJson.msg)
+      document.getElementById("readDocMsg") = myJson.msg;
+    //   $('#readDocMsg').append(myJson.msg)
   });
 }
 
