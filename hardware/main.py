@@ -219,11 +219,13 @@ def alertMode():
 
 #  Main Begins here
 WIFIConnect()
-thread(vibrationSensor, [])
-thread(HeartRate, [])
-thread(postData, [])
-#thread(WIFICheck(), [])
-thread(statusLED(), [])
+#thread(vibrationSensor, [])
+#thread(HeartRate, [])
+#hread(postData, [])
+#thread(WIFICheck, [])
+#thread(statusLED, [])
+thread(getAlert, [])
+thread(alertMode, [])
 try:
     while True:
         sleep(0.0005)
