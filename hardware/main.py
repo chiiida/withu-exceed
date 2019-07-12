@@ -235,11 +235,11 @@ def msgalertMode():
 
 #  Main Begins here
 WIFIConnect()
-#thread(vibrationSensor, [])
-#thread(HeartRate, [])
-#thread(postData, [])
-#thread(WIFICheck, [])
-#thread(statusLED, [])
+thread(vibrationSensor, [])
+thread(HeartRate, [])
+thread(postData, [])
+thread(WIFICheck, [])
+thread(statusLED, [])
 thread(getAlert, [])
 thread(alertMode, [])
 thread(msgalertMode, [])
