@@ -134,7 +134,7 @@ def HeartRate():
     global HEARTRATESTATUS, bpm
     while not EXITALL:
         bpm = readHR()
-        HEARTSTATUS = True
+        HEARTRATESTATUS = True
 
 
 # In progress
@@ -169,8 +169,6 @@ def postData():
             Pin(5, Pin.OUT).value(1)
             print('WIFISTATUS =', WIFISTATUS)
             if WIFISTATUS:
-                r = requests.get(API)
-                json_data = r.json()
                 data = json.dumps({
                     'vibration': vibration,
                     'bpm': bpm
