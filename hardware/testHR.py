@@ -48,7 +48,7 @@ def readHR():
         sleep(sleep_time)
 
     average = sum(data)/len(data)
-    thres = average+0.5*stddev(data)
+    thres = average+0.75*stddev(data)
 
     result = [raw > thres for raw in data]
 
