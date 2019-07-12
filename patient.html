@@ -5,38 +5,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
+
     <title>WithÜ</title>
     <link rel="shortcut icon" type="img/png" href="img/withu-icon.png">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="timer.css" rel="stylesheet">
 </head>
 
-<body>
-    
-</body>
-    <div class="container">
-        <select class="selectpicker" id="hour"></select>
-        <select class="selectpicker" id="min"></select>
-        <button type="button" class="btn btn-primary" onclick="setTime()">SET</button>
+<body style="background: linear-gradient(#FFFFFF,#FFEDBC );
+background-size: cover;">
+    <!-- <div class="container">
+        <p id="readDocMsg"></p>   
+    </div> -->
+    <div class="row" style="padding: 5%">
+        <div class="col-4">
+            <div class="row">
+                <div class="card" style="width : 80%; height: 300px">
+                    <div class="card-body">
+                        Alarm
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            Quote of the day
+        </div>
+    </div>
+    <div class="row" style="padding: 5%">
+        <div class="col-4">
+            <div class="row">
+                <div class="card"  style="width : 80%; height: 300px ;margin-top: 1px">
+                    <div class="card-body">
+                        range
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            Show Pulse
+        </div>
     </div>
 
-    <div class="container">
-        <h1>Msg</h1>
-        <p id="readDocMsg"></p>
-    </div>
+
+
 
     <!-- JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"
+        integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <!-- Core JS -->
-    <script src="js/timer.js"></script>
     <script src="js/patient.js"></script>
     <script src="js/quote-data.js"></script>
+
+
+</body>
+
 </html>
