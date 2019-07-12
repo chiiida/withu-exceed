@@ -20,7 +20,7 @@ hr = ADC(Pin(34))
 hr.atten(ADC.ATTN_11DB)
 hr.width(ADC.WIDTH_12BIT)
 API_alert = "https://exceed.superposition.pknn.dev/data/withu"
-API_data = "http://10.46.75.118:5000/data"
+API_data = "http://103.86.50.95:5000/data"
 
 #  Init Status
 LEDSTATUS = 'disconnected'
@@ -103,6 +103,8 @@ def readHR():
         if res > thres and not data[i-1] > thres:
             n_beat += 1
 
+    del data
+    
     bpm = n_beat*60//time
     return bpm
 
@@ -182,7 +184,32 @@ def getAlert():
             if type(ALERTSTATUS) != bool:
               ALERTSTATUS = ALERTSTATUS.lower()=='true'
             MSGALERT = rest["msg"]!=''
-            print('ALERTSTATUS =', ALERTSTATUS)
+            if ALERTSTATUS:
+                for _ in range(10):
+                    print('Alert mode!!!!!!')
+                    p_buzzer.value(1)
+                    sleep(0.5)
+                    p_buzzer.value(0)
+                    sleep(0.5)
+            if MSGALERT:
+                for _ in range(10):
+                    print('msgAlert!!!!!!')
+                    p_buzzer2.value(1)
+                    sleep(1)
+                    p_buzzer2.value(0)
+                    sleep(0.1)
+                    p_buzzer2.value(1)
+                    sleep(0.1)
+                    p_buzzer2.value(0)
+                    sleep(0.1)
+                    p_buzzer2.value(1)
+                    sleep(0.1)
+                    p_buzzer2.value(0)
+                    sleep(0.1)
+                    p_buzzer2.value(1)
+                    sleep(0.1)
+                    p_buzzer2.value(0)
+                    sleep(2)
         sleep(1)
             
 
@@ -239,10 +266,10 @@ thread(vibrationSensor, [])
 thread(HeartRate, [])
 thread(postData, [])
 thread(WIFICheck, [])
-thread(statusLED, [])
+# thread(statusLED, [])
 thread(getAlert, [])
-thread(alertMode, [])
-thread(msgalertMode, [])
+# thread(alertMode, [])
+# thread(msgalertMode, [])
 try:
     while True:
         sleep(0.0005)
