@@ -22,8 +22,6 @@ function drawGraph() {
                 // The data for our dataset
                 data: {
                     labels: timestamp,
-                    xAxisID: 'minutes',
-                    yAxisID: 'Heart rate',
                     datasets: [{
                         label: 'Real-time BPM',
                         borderColor: 'rgb(255, 99, 132)',
@@ -39,7 +37,18 @@ function drawGraph() {
                             display: true,
                             ticks: {
                                 max: Math.max(...myJson) + 5,
-                                min: Math.min(...myJson) - 5
+                                min: Math.min(...myJson) - 5,
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Heart rate',
+                            }
+                        }],
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Minutes',
                             }
                         }]
                     },
@@ -80,6 +89,16 @@ function drawGraphBar() {
                             display: true,
                             ticks: {
                                 max: Math.max(...myJson) + 5,
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Vibration',
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Minutes',
                             }
                         }]
                     },
