@@ -36,7 +36,7 @@ EXITALL = False
 p_vibration = Pin(27, Pin.IN)
 p_RLED = Pin(14, Pin.OUT)
 p_GLED = Pin(12, Pin.OUT)
-p_BLED = Pin(13, Pin.OUT)
+p_BLED = Pin(5, Pin.OUT) # Pin led !!!
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 hr = ADC(Pin(34))
@@ -82,16 +82,17 @@ def vibrationSensor():
     while not EXITALL:
         LEDSTATUS = 'measuring'
         count = 0
-        for i in range(6000):
+        v_count = 0
+        while not (HEARTRATESTATUS):
+            count += 1
             if (p_vibration == 0):
-                count += 1
+                v_count += 1
             sleep(0.01)
-        if (count >= 5000):
+        if (v_count >= (count * 20 / 100)):
             vibration = True
         else:
             vibration = False
         VIBRATIONSTATUS = True
-        print('VIBRATIONSTATUS = ', VIBRATIONSTATUS)
         sleep(0.01)
 
 
@@ -100,13 +101,8 @@ def readHR():
     time = 10  # in seconds.
     sleep_time = 0.01
     
-    data = []
-    data_len = time//sleep_time
-    while not EXITALL:
-        data.append(100)
-        if len(data) == data_len:
-            break
-
+    data_len = int(time//sleep_time)
+    data = [100 for _ in range(data_len)]
     i = 0
     sum_data = 0
     print("Start measuring")
@@ -138,7 +134,10 @@ def HeartRate():
     global HEARTRATESTATUS, bpm, EXITALL, LEDSTATUS
     while not EXITALL:
         LEDSTATUS == 'measuring'
-        bpm = readHR()
+        bpm = 0
+        for i in range (2):
+          bpm += readHR()
+        bpm /= 2
         HEARTRATESTATUS = True
         print('HEARTRATESTATUS = ', HEARTRATESTATUS)
         sleep(0.1)
@@ -201,7 +200,7 @@ thread(vibrationSensor, [])
 thread(HeartRate, [])
 thread(postData, [])
 #thread(WIFICheck(), [])
-#thread(statusLED(), [])
+thread(statusLED(), [])
 try:
     while True:
         sleep(0.0005)
