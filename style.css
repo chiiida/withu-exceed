@@ -1,4 +1,7 @@
 /* background: linear-gradient(#DCE35B, #45B649 ); */
+* {
+    font-family: product sans;
+}
 
 body {
     padding-top: 3%;
