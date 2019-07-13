@@ -10,4 +10,6 @@ function getBpm() {
   });
 }
 
-getBpm();
+setInterval(() => {
+  getBpm();
+}, 1000)
