@@ -14,7 +14,7 @@ EXITALL = False
 p_vibration = Pin(27, Pin.IN)
 p_RLED = Pin(14, Pin.OUT)
 p_GLED = Pin(12, Pin.OUT)
-p_BLED = Pin(13, Pin.OUT)  # Pin led !!!
+p_BLED = Pin(13, Pin.OUT) 
 p_buzzer = Pin(5, Pin.OUT)
 p_buzzer2 = Pin(18, Pin.OUT)
 wlan = network.WLAN(network.STA_IF)
@@ -24,7 +24,7 @@ hr.atten(ADC.ATTN_11DB)
 hr.width(ADC.WIDTH_12BIT)
 API_alert = "https://exceed.superposition.pknn.dev/data/withu"
 API_data = "http://103.86.50.95:5000/data"
-
+BPM = 0
 #  Init Status
 LEDSTATUS = 'disconnected'
 WIFISTATUS = False
@@ -76,11 +76,9 @@ def vibrationSensor():
             if (p_vibration == 0):
                 v_count += 1
             sleep(0.01)
-        if (v_count >= (count * 20 / 100)):
-            vibration = True
-        else:
-            vibration = False
+        v_count = v_count / count * 40
         VIBRATIONSTATUS = True
+        vibration = v_count
         sleep(0.01)
 
 
@@ -103,7 +101,7 @@ def readHR():
     print("finished")
 
     average = sum_data/data_len
-    thres = average*10
+    thres = average*1.07
 
     n_beat = 0
 
@@ -116,23 +114,25 @@ def readHR():
     del data
     gc.collect()
     bpm = n_beat*60//time
+    print("BPM1:",bpm)
     return bpm
 
 
 #  Recive data from readHR
 def HeartRate():
-    global HEARTRATESTATUS, bpm, EXITALL, LEDSTATUS, p_RLED, p_GLED, p_BLED
+    global HEARTRATESTATUS, BPM, EXITALL, LEDSTATUS, p_RLED, p_GLED, p_BLED
     while not EXITALL:
         p_RLED.value(0)
         p_GLED.value(0)
         p_BLED.value(1)
-        bpm = 0
+        BPM = 0
         for i in range(2):
-            bpm += readHR()
-        bpm /= 2
+            BPM += readHR()
+        BPM /= 2
+        print("BPM:",BPM)
         HEARTRATESTATUS = True
         print('HEARTRATESTATUS = ', HEARTRATESTATUS)
-        sleep(0.1)
+        sleep(6)
 
 
 # LED tell status
@@ -167,21 +167,23 @@ def statusLED():
 
 #  Send data to web
 def postData():
-    global API_data, HEARTRATESTATUS, bpm, VIBRATIONSTATUS, vibration, EXITALL
+    global API_data, HEARTRATESTATUS, BPM, VIBRATIONSTATUS, vibration, EXITALL
     while not EXITALL:
         if (VIBRATIONSTATUS and HEARTRATESTATUS):
             if WIFISTATUS:
                 data = json.dumps({
                     'data': {
                         'vibration': vibration,
-                        'bpm': bpm
+                        'bpm': BPM
                     }
                 })
                 print(data)
                 headers = {'Content-type': 'application/json'}
                 VIBRATIONSTATUS = False
                 HEARTRATESTATUS = False
-                print(requests.post(API_data, data=data, headers=headers).content)
+                req_post = requests.post(API_data, data=data, headers=headers)
+                print(req_post.content)
+                req_post.close()
                 gc.collect()
         sleep(5)
 
@@ -195,7 +197,9 @@ def getAlert():
     while not EXITALL:
         if WIFISTATUS:
             headers = {'Content-type': 'application/json'}
-            rest = requests.get(API_alert, headers=headers).json()
+            get_req = requests.get(API_alert, headers=headers)
+            rest = get_req.json()
+            get_req.close()
             ALERTSTATUS = rest["alert"]
             if type(ALERTSTATUS) != bool:
                 ALERTSTATUS = ALERTSTATUS.lower() == 'true'
@@ -278,13 +282,16 @@ WIFIConnect()
 thread(vibrationSensor, [])
 thread(HeartRate, [])  # Pass
 thread(postData, [])  # Pass
-thread(WIFICheck, [])
+#thread(WIFICheck, [])
 # thread(statusLED, [])
 thread(getAlert, [])
 # thread(alertMode, [])
 # thread(msgalertMode, [])
 try:
     while True:
-        sleep(0.0005)
+        sleep(0.001)
 except:
     EXITALL = True
+
+
+
