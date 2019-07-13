@@ -1,5 +1,7 @@
 # WithÜ
 
+![alt text](https://github.com/llleyelll/withu-exceed/blob/master/img/withu-logo.png)
+
 **Authors**
 
     1. Miss Thanida Jongarnon 6110545538
